@@ -62,9 +62,7 @@ class CameraXLivePreviewActivity :
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate")
-    if (savedInstanceState != null) {
-      selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, POSE_DETECTION)
-    }
+    selectedModel = POSE_DETECTION
     cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
     setContentView(R.layout.activity_vision_camerax_live_preview)
     previewView = findViewById(R.id.preview_view)
@@ -90,10 +88,9 @@ class CameraXLivePreviewActivity :
       )
   }
 
-  override fun onSaveInstanceState(bundle: Bundle) {
-    super.onSaveInstanceState(bundle)
-    bundle.putString(STATE_SELECTED_MODEL, selectedModel)
-  }
+//  override fun onSaveInstanceState(bundle: Bundle) {
+//    super.onSaveInstanceState(bundle)
+//  }
 
   override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
     if (cameraProvider == null) {
@@ -253,7 +250,5 @@ class CameraXLivePreviewActivity :
   companion object {
     private const val TAG = "CameraXLivePreview"
     private const val POSE_DETECTION = "Pose Detection"
-
-    private const val STATE_SELECTED_MODEL = "selected_model"
   }
 }
