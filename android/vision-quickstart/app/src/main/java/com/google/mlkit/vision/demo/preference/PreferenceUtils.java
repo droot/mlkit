@@ -18,10 +18,8 @@ package com.google.mlkit.vision.demo.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.camera.core.CameraSelector;
 import com.google.android.gms.common.images.Size;
@@ -76,7 +74,7 @@ public class PreferenceUtils {
     }
   }
 
-  @RequiresApi(VERSION_CODES.LOLLIPOP)
+//  @RequiresApi(VERSION_CODES.LOLLIPOP)
   @Nullable
   public static android.util.Size getCameraXTargetResolution(Context context, int lensfacing) {
     Preconditions.checkArgument(
