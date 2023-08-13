@@ -48,11 +48,6 @@
         </activity>
 
         <activity
-            android:name=".kotlin.ChooserActivity"
-            android:exported="false">
-        </activity>
-
-        <activity
             android:name=".kotlin.CameraXLivePreviewActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
