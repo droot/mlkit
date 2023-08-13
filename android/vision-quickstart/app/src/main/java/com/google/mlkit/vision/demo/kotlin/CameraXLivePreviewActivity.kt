@@ -19,12 +19,7 @@ package com.google.mlkit.vision.demo.kotlin
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.CompoundButton
-import android.widget.Spinner
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.camera.core.Camera
@@ -50,7 +45,7 @@ import com.google.mlkit.vision.demo.preference.PreferenceUtils
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
 class CameraXLivePreviewActivity :
-  AppCompatActivity(), OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+  AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
   private var previewView: PreviewView? = null
   private var graphicOverlay: GraphicOverlay? = null
@@ -80,17 +75,7 @@ class CameraXLivePreviewActivity :
     if (graphicOverlay == null) {
       Log.d(TAG, "graphicOverlay is null")
     }
-    val spinner = findViewById<Spinner>(R.id.spinner)
-    val options: MutableList<String> = ArrayList()
-    options.add(POSE_DETECTION)
 
-    // Creating adapter for spinner
-    val dataAdapter = ArrayAdapter(this, R.layout.spinner_style, options)
-    // Drop down layout style - list view with radio button
-    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-    // attaching data adapter to spinner
-    spinner.adapter = dataAdapter
-    spinner.onItemSelectedListener = this
     val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
     facingSwitch.setOnCheckedChangeListener(this)
     ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
@@ -108,19 +93,6 @@ class CameraXLivePreviewActivity :
   override fun onSaveInstanceState(bundle: Bundle) {
     super.onSaveInstanceState(bundle)
     bundle.putString(STATE_SELECTED_MODEL, selectedModel)
-  }
-
-  @Synchronized
-  override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-    // An item was selected. You can retrieve the selected item using
-    // parent.getItemAtPosition(pos)
-    selectedModel = parent?.getItemAtPosition(pos).toString()
-    Log.d(TAG, "Selected model: $selectedModel")
-    bindAnalysisUseCase()
-  }
-
-  override fun onNothingSelected(parent: AdapterView<*>?) {
-    // Do nothing.
   }
 
   override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
