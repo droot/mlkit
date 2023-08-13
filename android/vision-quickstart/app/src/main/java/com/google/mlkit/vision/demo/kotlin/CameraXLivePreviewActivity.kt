@@ -16,7 +16,6 @@
 
 package com.google.mlkit.vision.demo.kotlin
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
@@ -25,7 +24,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
-import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -48,8 +46,6 @@ import com.google.mlkit.vision.demo.R
 import com.google.mlkit.vision.demo.VisionImageProcessor
 import com.google.mlkit.vision.demo.kotlin.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
-import com.google.mlkit.vision.demo.preference.SettingsActivity
-import com.google.mlkit.vision.demo.preference.SettingsActivity.LaunchSource
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
@@ -107,13 +103,6 @@ class CameraXLivePreviewActivity :
           bindAllCameraUseCases()
         }
       )
-
-    val settingsButton = findViewById<ImageView>(R.id.settings_button)
-    settingsButton.setOnClickListener {
-      val intent = Intent(applicationContext, SettingsActivity::class.java)
-      intent.putExtra(SettingsActivity.EXTRA_LAUNCH_SOURCE, LaunchSource.CAMERAX_LIVE_PREVIEW)
-      startActivity(intent)
-    }
   }
 
   override fun onSaveInstanceState(bundle: Bundle) {
