@@ -44,6 +44,7 @@ android {
     aaptOptions {
         noCompress "tflite"
     }
+    namespace 'com.google.mlkit.vision.demo'
 }
 
 repositories {
