@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.CompoundButton
 import android.widget.Toast
-import android.widget.ToggleButton
+//import android.widget.ToggleButton
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
@@ -29,16 +29,14 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.annotation.KeepName
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.demo.CameraXViewModel
-import com.google.mlkit.vision.demo.GraphicOverlay
-import com.google.mlkit.vision.demo.R
 import com.google.mlkit.vision.demo.VisionImageProcessor
+import com.google.mlkit.vision.demo.databinding.ActivityVisionCameraxLivePreviewBinding
 import com.google.mlkit.vision.demo.kotlin.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
 
@@ -47,8 +45,6 @@ import com.google.mlkit.vision.demo.preference.PreferenceUtils
 class CameraXLivePreviewActivity :
   AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
-  private var previewView: PreviewView? = null
-  private var graphicOverlay: GraphicOverlay? = null
   private var cameraProvider: ProcessCameraProvider? = null
   private var camera: Camera? = null
   private var previewUseCase: Preview? = null
@@ -59,23 +55,32 @@ class CameraXLivePreviewActivity :
   private var lensFacing = CameraSelector.LENS_FACING_BACK
   private var cameraSelector: CameraSelector? = null
 
+  private lateinit var binding: ActivityVisionCameraxLivePreviewBinding
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate")
+
+    binding = ActivityVisionCameraxLivePreviewBinding.inflate(layoutInflater)
+    val view = binding.root
+
     selectedModel = POSE_DETECTION
     cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
-    setContentView(R.layout.activity_vision_camerax_live_preview)
-    previewView = findViewById(R.id.preview_view)
-    if (previewView == null) {
-      Log.d(TAG, "previewView is null")
-    }
-    graphicOverlay = findViewById(R.id.graphic_overlay)
-    if (graphicOverlay == null) {
-      Log.d(TAG, "graphicOverlay is null")
-    }
 
-    val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
-    facingSwitch.setOnCheckedChangeListener(this)
+//    previewView =  view.preview_view
+//    graphicOverlay = view.graphic_overlay
+    //findViewById(R.id.preview_view)
+//    if (previewView == null) {
+//      Log.d(TAG, "previewView is null")
+//    }
+//    graphicOverlay = findViewById(R.id.graphic_overlay)
+//    if (graphicOverlay == null) {
+//      Log.d(TAG, "graphicOverlay is null")
+//    }
+    setContentView(view)
+
+//    val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
+//    facingSwitch.setOnCheckedChangeListener(this)
     ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
       .get(CameraXViewModel::class.java)
       .processCameraProvider
@@ -105,7 +110,7 @@ class CameraXLivePreviewActivity :
     val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
     try {
       if (cameraProvider!!.hasCamera(newCameraSelector)) {
-        Log.d(TAG, "Set facing to " + newLensFacing)
+//        Log.d(TAG, "Set facing to " + newLensFacing)
         lensFacing = newLensFacing
         cameraSelector = newCameraSelector
         bindAllCameraUseCases()
@@ -164,7 +169,7 @@ class CameraXLivePreviewActivity :
       builder.setTargetResolution(targetResolution)
     }
     previewUseCase = builder.build()
-    previewUseCase!!.setSurfaceProvider(previewView!!.getSurfaceProvider())
+    previewUseCase!!.setSurfaceProvider(binding.previewView.surfaceProvider)
     camera =
       cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
   }
@@ -230,14 +235,14 @@ class CameraXLivePreviewActivity :
           val isImageFlipped = lensFacing == CameraSelector.LENS_FACING_FRONT
           val rotationDegrees = imageProxy.imageInfo.rotationDegrees
           if (rotationDegrees == 0 || rotationDegrees == 180) {
-            graphicOverlay!!.setImageSourceInfo(imageProxy.width, imageProxy.height, isImageFlipped)
+            binding.graphicOverlay.setImageSourceInfo(imageProxy.width, imageProxy.height, isImageFlipped)
           } else {
-            graphicOverlay!!.setImageSourceInfo(imageProxy.height, imageProxy.width, isImageFlipped)
+            binding.graphicOverlay.setImageSourceInfo(imageProxy.height, imageProxy.width, isImageFlipped)
           }
           needUpdateGraphicOverlayImageSourceInfo = false
         }
         try {
-          imageProcessor!!.processImageProxy(imageProxy, graphicOverlay)
+          imageProcessor!!.processImageProxy(imageProxy, binding.graphicOverlay)
         } catch (e: MlKitException) {
           Log.e(TAG, "Failed to process image. Error: " + e.localizedMessage)
           Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
