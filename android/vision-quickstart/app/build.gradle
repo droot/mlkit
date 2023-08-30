@@ -1,10 +1,13 @@
+plugins {
+    id 'com.google.devtools.ksp' version '1.9.0-1.0.11'
+//    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-//apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'com.google.devtools.ksp'
-
 
 android {
+
     compileSdkVersion 33
 
     buildFeatures {
@@ -63,6 +66,13 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.11'
+
+    implementation "androidx.room:room-runtime:2.5.2"
+    annotationProcessor "androidx.room:room-compiler:2.5.2"
+
+    ksp "androidx.room:room-compiler:2.5.2"
+
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
     implementation 'androidx.multidex:multidex:2.0.1'
 
@@ -169,10 +179,7 @@ dependencies {
     // On Device Machine Learnings
     implementation "com.google.android.odml:image:1.0.0-beta1"
 
-    implementation "androidx.room:room-ktx:2.5.2"
-    implementation "androidx.room:room-runtime:2.5.2"
 
-//    ksp 'androidx.room:room-compiler:2.5.1'
 }
 
 configurations {
