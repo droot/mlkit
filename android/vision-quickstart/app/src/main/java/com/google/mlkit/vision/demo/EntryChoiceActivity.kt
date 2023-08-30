@@ -25,19 +25,22 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.util.ArrayList
 import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-//import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.mlkit.vision.demo.R
+import com.google.mlkit.vision.demo.ui.theme.RepsTrackerTheme
 
 class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -45,14 +48,18 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
     super.onCreate(savedInstanceState)
 
     setContent {
-      HomeScreen(onClick = {
-        val intent =
-          Intent(
-            this@EntryChoiceActivity,
-            com.google.mlkit.vision.demo.kotlin.CameraXLivePreviewActivity::class.java
-          )
-        startActivity(intent)
-      })
+      RepsTrackerTheme {
+        Surface (/*color = MaterialTheme.colorScheme.primary*/) {
+          HomeScreen(onClick = {
+            val intent =
+              Intent(
+                this@EntryChoiceActivity,
+                com.google.mlkit.vision.demo.kotlin.CameraXLivePreviewActivity::class.java
+              )
+            startActivity(intent)
+          })
+        }
+      }
     }
 
     if (!allRuntimePermissionsGranted()) {
@@ -117,14 +124,15 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
 fun HomeScreen(
   onClick: () -> Unit = {}
 ) {
-  Column(Modifier.fillMaxSize()) {
-//    Text(
-//      text = stringResource(R.string.kotlin_entry_title),
-//      style = MaterialTheme.typography.headlineMedium
-//    )
-//    Spacer(modifier = Modifier.weight(1f))
-    Button(onClick = onClick, Modifier.fillMaxWidth()) {
-      Text(text = stringResource(R.string.kotlin_entry_title))
+  Column(Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+    Button(onClick = onClick,
+      modifier = Modifier.padding(vertical = 24.dp)
+      ) {
+      Text(text = stringResource(R.string.kotlin_entry_title),
+       )
     }
   }
 }
