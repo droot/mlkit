@@ -16,6 +16,7 @@
 
 package com.google.mlkit.vision.demo
 
+import androidx.compose.runtime.Composable
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -23,28 +24,35 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.mlkit.vision.demo.databinding.ActivityVisionEntryChoiceBinding
 import java.util.ArrayList
+import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+//import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.google.mlkit.vision.demo.R
 
 class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
-  private lateinit var binding: ActivityVisionEntryChoiceBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityVisionEntryChoiceBinding.inflate(layoutInflater)
-    val view = binding.root
-    setContentView(view)
 
-    binding.kotlinEntryPoint.setOnClickListener {
-      val intent =
-        Intent(
-          this@EntryChoiceActivity,
-          com.google.mlkit.vision.demo.kotlin.CameraXLivePreviewActivity::class.java
-        )
-      startActivity(intent)
+    setContent {
+      HomeScreen(onClick = {
+        val intent =
+          Intent(
+            this@EntryChoiceActivity,
+            com.google.mlkit.vision.demo.kotlin.CameraXLivePreviewActivity::class.java
+          )
+        startActivity(intent)
+      })
     }
 
     if (!allRuntimePermissionsGranted()) {
@@ -102,5 +110,21 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.READ_EXTERNAL_STORAGE
       )
+  }
+}
+
+@Composable
+fun HomeScreen(
+  onClick: () -> Unit = {}
+) {
+  Column(Modifier.fillMaxSize()) {
+//    Text(
+//      text = stringResource(R.string.kotlin_entry_title),
+//      style = MaterialTheme.typography.headlineMedium
+//    )
+//    Spacer(modifier = Modifier.weight(1f))
+    Button(onClick = onClick, Modifier.fillMaxWidth()) {
+      Text(text = stringResource(R.string.kotlin_entry_title))
+    }
   }
 }
