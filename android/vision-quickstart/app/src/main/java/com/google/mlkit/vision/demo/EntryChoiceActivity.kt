@@ -40,18 +40,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.demo.data.AppContainer
 import com.google.mlkit.vision.demo.data.AppDataContainer
-import com.google.mlkit.vision.demo.data.RepItem
 import com.google.mlkit.vision.demo.ui.theme.RepsTrackerTheme
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 
 class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
-  lateinit var container: AppContainer
-
-  init {
-    container = AppDataContainer(this)
-  }
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -59,13 +51,6 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
       RepsTrackerTheme {
         Surface (/*color = MaterialTheme.colorScheme.primary*/) {
           HomeScreen(onClick = {
-            val item = RepItem(
-              name="squats_up",
-              quantity = 3
-            )
-            runBlocking {
-              container.itemsRepository.insertItem(item)
-            }
             val intent =
               Intent(
                 this@EntryChoiceActivity,

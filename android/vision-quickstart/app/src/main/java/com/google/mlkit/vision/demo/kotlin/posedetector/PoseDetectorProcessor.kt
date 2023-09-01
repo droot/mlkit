@@ -23,13 +23,15 @@ import com.google.android.gms.tasks.Task
 import com.google.android.odml.image.MlImage
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.demo.GraphicOverlay
+import com.google.mlkit.vision.demo.data.AppContainer
+import com.google.mlkit.vision.demo.data.RepItem
 import com.google.mlkit.vision.demo.java.posedetector.classification.PoseClassifierProcessor
 import com.google.mlkit.vision.demo.kotlin.VisionProcessorBase
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
-import java.util.ArrayList
+import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -42,7 +44,8 @@ class PoseDetectorProcessor(
   private val visualizeZ: Boolean,
   private val rescaleZForVisualization: Boolean,
   private val runClassification: Boolean,
-  private val isStreamMode: Boolean
+  private val isStreamMode: Boolean,
+  private val container: AppContainer
 ) : VisionProcessorBase<PoseDetectorProcessor.PoseWithClassification>(context) {
 
   private val detector: PoseDetector
@@ -126,6 +129,14 @@ class PoseDetectorProcessor(
         poseWithClassification.classificationResult
       )
     )
+    val item = RepItem(
+      0,
+      "squats_up",
+      3
+    )
+    runBlocking {
+      container.itemsRepository.insertItem(item)
+    }
   }
 
   override fun onFailure(e: Exception) {

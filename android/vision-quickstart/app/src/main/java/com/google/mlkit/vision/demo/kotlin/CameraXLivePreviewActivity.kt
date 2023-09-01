@@ -41,6 +41,8 @@ import com.google.mlkit.vision.demo.kotlin.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
 import java.util.Locale
 import android.speech.tts.TextToSpeech
+import com.google.mlkit.vision.demo.data.AppContainer
+import com.google.mlkit.vision.demo.data.AppDataContainer
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
@@ -58,6 +60,11 @@ class CameraXLivePreviewActivity :
   private var cameraSelector: CameraSelector? = null
 
   private lateinit var binding: ActivityVisionCameraxLivePreviewBinding
+
+  var container: AppContainer
+  init {
+    container = AppDataContainer(this)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -203,7 +210,8 @@ class CameraXLivePreviewActivity :
               visualizeZ,
               rescaleZ,
               runClassification,
-              /* isStreamMode = */ true
+              /* isStreamMode = */ true,
+              container
             )
           }
           else -> throw IllegalStateException("Invalid model name")
