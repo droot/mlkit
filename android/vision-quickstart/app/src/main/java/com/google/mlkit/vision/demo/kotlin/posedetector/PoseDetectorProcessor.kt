@@ -17,6 +17,7 @@
 package com.google.mlkit.vision.demo.kotlin.posedetector
 
 import android.content.Context
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.odml.image.MlImage
@@ -29,6 +30,7 @@ import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import java.util.ArrayList
+import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -48,15 +50,26 @@ class PoseDetectorProcessor(
 
   private var poseClassifierProcessor: PoseClassifierProcessor? = null
 
+  private var speaker: TextToSpeech? = null
+
   /** Internal class to hold Pose and classification results. */
   class PoseWithClassification(val pose: Pose, val classificationResult: List<String>)
 
   init {
     detector = PoseDetection.getClient(options)
     classificationExecutor = Executors.newSingleThreadExecutor()
+    speaker = TextToSpeech(context) { status ->
+      if (status != TextToSpeech.ERROR) {
+        speaker?.setLanguage(Locale.UK)
+      }
+    }
   }
 
   override fun stop() {
+    if(speaker !=null){
+      speaker?.stop();
+      speaker?.shutdown();
+    }
     super.stop()
     detector.close()
   }
@@ -73,7 +86,7 @@ class PoseDetectorProcessor(
             if (poseClassifierProcessor == null) {
               poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
             }
-            classificationResult = poseClassifierProcessor!!.getPoseResult(pose)
+            classificationResult = poseClassifierProcessor!!.getPoseResult(pose, speaker)
           }
           PoseWithClassification(pose, classificationResult)
         }
@@ -92,7 +105,7 @@ class PoseDetectorProcessor(
             if (poseClassifierProcessor == null) {
               poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
             }
-            classificationResult = poseClassifierProcessor!!.getPoseResult(pose)
+            classificationResult = poseClassifierProcessor!!.getPoseResult(pose, speaker)
           }
           PoseWithClassification(pose, classificationResult)
         }

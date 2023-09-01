@@ -107,7 +107,7 @@ public class PoseDetectorProcessor
                 if (poseClassifierProcessor == null) {
                   poseClassifierProcessor = new PoseClassifierProcessor(context, isStreamMode);
                 }
-                classificationResult = poseClassifierProcessor.getPoseResult(pose);
+                classificationResult = poseClassifierProcessor.getPoseResult(pose, null);
               }
               return new PoseWithClassification(pose, classificationResult);
             });
@@ -126,7 +126,7 @@ public class PoseDetectorProcessor
                 if (poseClassifierProcessor == null) {
                   poseClassifierProcessor = new PoseClassifierProcessor(context, isStreamMode);
                 }
-                classificationResult = poseClassifierProcessor.getPoseResult(pose);
+                classificationResult = poseClassifierProcessor.getPoseResult(pose, null);
               }
               return new PoseWithClassification(pose, classificationResult);
             });

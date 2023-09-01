@@ -39,6 +39,8 @@ import com.google.mlkit.vision.demo.VisionImageProcessor
 import com.google.mlkit.vision.demo.databinding.ActivityVisionCameraxLivePreviewBinding
 import com.google.mlkit.vision.demo.kotlin.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.demo.preference.PreferenceUtils
+import java.util.Locale
+import android.speech.tts.TextToSpeech
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName

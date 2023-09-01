@@ -19,6 +19,7 @@ package com.google.mlkit.vision.demo.java.posedetector.classification;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.speech.tts.TextToSpeech;
 import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.WorkerThread;
@@ -100,7 +101,7 @@ public class PoseClassifierProcessor {
    * 1: PoseClass : [0.0-1.0] confidence
    */
   @WorkerThread
-  public List<String> getPoseResult(Pose pose) {
+  public List<String> getPoseResult(Pose pose, TextToSpeech speaker) {
     Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper());
     List<String> result = new ArrayList<>();
     ClassificationResult classification = poseClassifier.classify(pose);
@@ -121,8 +122,9 @@ public class PoseClassifierProcessor {
         int repsAfter = repCounter.addClassificationResult(classification);
         if (repsAfter > repsBefore) {
           // Play a fun beep when rep counter updates.
-          ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-          tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+//          ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+//          tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+          speaker.speak(String.format(Locale.US, "%d", repsAfter), TextToSpeech.QUEUE_FLUSH, null);
           lastRepResult = String.format(
               Locale.US, "%s : %d reps", repCounter.getClassName(), repsAfter);
           break;
