@@ -52,7 +52,7 @@ class CameraXLivePreviewActivity :
   private var imageProcessor: VisionImageProcessor? = null
   private var needUpdateGraphicOverlayImageSourceInfo = false
   private var selectedModel = POSE_DETECTION
-  private var lensFacing = CameraSelector.LENS_FACING_BACK
+  private var lensFacing = CameraSelector.LENS_FACING_FRONT
   private var cameraSelector: CameraSelector? = null
 
   private lateinit var binding: ActivityVisionCameraxLivePreviewBinding
