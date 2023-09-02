@@ -15,6 +15,8 @@ interface RepItemsRepository {
 
     suspend fun updateItem(item: RepItem)
 
+    suspend fun upsertItem(item: RepItem)
+
     suspend fun deleteItem(item: RepItem)
 
 }

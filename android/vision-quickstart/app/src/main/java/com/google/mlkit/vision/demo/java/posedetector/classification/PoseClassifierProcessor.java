@@ -150,5 +150,4 @@ public class PoseClassifierProcessor {
 
     return result;
   }
-
 }

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 
@@ -17,6 +18,9 @@ interface RepItemDao {
 
     @Update
     suspend fun update(item: RepItem)
+
+    @Upsert
+    suspend fun upsert(item: RepItem)
 
     @Delete
     suspend fun delete(item: RepItem)

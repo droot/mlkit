@@ -35,7 +35,8 @@ import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-
+import java.util.Calendar
+import java.util.Random
 /** A processor to run pose detector. */
 class PoseDetectorProcessor(
   private val context: Context,
@@ -55,11 +56,15 @@ class PoseDetectorProcessor(
 
   private var speaker: TextToSpeech? = null
 
+  private var sessionID: Int
+
   /** Internal class to hold Pose and classification results. */
   class PoseWithClassification(val pose: Pose, val classificationResult: List<String>)
 
   init {
     detector = PoseDetection.getClient(options)
+    sessionID = generateRandomNumberBasedOnDay()
+
     classificationExecutor = Executors.newSingleThreadExecutor()
     speaker = TextToSpeech(context) { status ->
       if (status != TextToSpeech.ERROR) {
@@ -68,10 +73,22 @@ class PoseDetectorProcessor(
     }
   }
 
+  fun generateRandomNumberBasedOnDay(): Int {
+    val calendar = Calendar.getInstance()
+    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+    // Use the day of the month as the seed for random number generation
+//    val random = Random(dayOfMonth.toLong())
+//    val random =
+    // Generate a random number between 1 and 100
+    return Random().nextInt(100000) + 1
+  }
+
+
   override fun stop() {
     if(speaker !=null){
-      speaker?.stop();
-      speaker?.shutdown();
+      speaker?.stop()
+      speaker?.shutdown()
     }
     super.stop()
     detector.close()
@@ -129,15 +146,33 @@ class PoseDetectorProcessor(
         poseWithClassification.classificationResult
       )
     )
-    val item = RepItem(
-      0,
-      "squats_up",
-      3
-    )
-    runBlocking {
-      container.itemsRepository.insertItem(item)
-    }
+    try {
+      val exerciseInfo = parseExercise(poseWithClassification.classificationResult[0])
+      val (name, reps) = exerciseInfo
+        val item = RepItem(
+          sessionID,
+          name,
+          reps,
+          ""
+        )
+        runBlocking {
+          container.itemsRepository.upsertItem(item)
+        }
+      } catch (e: Exception) {
+        Log.e(TAG, "parsing pose classification result failed!", e)
+      }
   }
+
+  fun parseExercise(string: String): Pair<String, Int> {
+    val regex = """(\w+)\s:\s(\d+)\sreps""".toRegex()
+    val match = regex.find(string) ?: throw IllegalArgumentException("String is not in the format '%s : %d reps'")
+
+    val exerciseName = match.groupValues[1]
+    val reps = match.groupValues[2].toInt()
+
+    return Pair(exerciseName, reps)
+  }
+
 
   override fun onFailure(e: Exception) {
     Log.e(TAG, "Pose detection failed!", e)

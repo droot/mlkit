@@ -57,7 +57,16 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
                 com.google.mlkit.vision.demo.kotlin.CameraXLivePreviewActivity::class.java
               )
             startActivity(intent)
-          })
+          },
+            onClick1 = {
+              val intent =
+                Intent(
+                  this@EntryChoiceActivity,
+                  com.google.mlkit.vision.demo.ActivityHistory::class.java
+                )
+              startActivity(intent)
+
+            })
         }
       }
     }
@@ -122,7 +131,8 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
 
 @Composable
 fun HomeScreen(
-  onClick: () -> Unit = {}
+  onClick: () -> Unit = {},
+  onClick1: () -> Unit = {}
 ) {
   Column(Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.Center,
@@ -133,6 +143,29 @@ fun HomeScreen(
       ) {
       Text(
         text = stringResource(R.string.kotlin_entry_title),
+      )
+    }
+    Button(onClick = onClick1,
+      modifier = Modifier.padding(vertical = 24.dp)
+    ) {
+      Text(
+        text = stringResource(R.string.activity_history),
+      )
+    }
+  }
+}
+
+@Composable
+fun ActivityHistoryScreen() {
+  Column(Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Button(onClick = {},
+      modifier = Modifier.padding(vertical = 24.dp)
+    ) {
+      Text(
+        text = stringResource(R.string.activity_history_title),
       )
     }
   }

@@ -3,6 +3,8 @@
     <string name="app_name" translatable="false">MLKit-Vision</string>
     <string name="java_entry_title" translatable="false">Run the ML Kit quickstart written in Java</string>
     <string name="kotlin_entry_title" translatable="false">Track Exercise</string>
+    <string name="activity_history" translatable="false">Activity History</string>
+    <string name="activity_history_title" translatable="false">Yahoo</string>
     <string name="ok" translatable="false">OK</string>
     <string name="permission_camera_rationale" translatable="false">Access to the camera is needed for detection</string>
     <string name="no_camera_permission" translatable="false">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
@@ -160,5 +162,6 @@
     <string name="pref_group_title_face_mesh" translatable="false">Face Mesh Detection</string>
     <string name="pref_title_face_mesh_use_case" translatable="false">Use Case</string>
     <string name="pref_key_face_mesh_use_case" translatable="false">face_mesh_use_case</string>
+    <string name="title_activity_history">ActivityHistory</string>
 
 </resources>
