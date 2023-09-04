@@ -44,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.mlkit.vision.demo.data.RepItem
 import com.google.mlkit.vision.demo.ui.theme.RepsTrackerTheme
 import androidx.compose.runtime.getValue
+import java.text.SimpleDateFormat
 
 class ActivityHistory :  ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,7 +131,7 @@ private fun InventoryList(
     itemList: List<RepItem>, onItemClick: (RepItem) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = itemList, key = { it.id }) { item ->
+        items(items = itemList, key = { item -> String.format("%s-%d", item.name, item.id) }) { item ->
             InventoryItem(item = item,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
@@ -155,19 +156,17 @@ private fun InventoryItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = item.name,
+                    text = item.formatActivityName(),
                     style = MaterialTheme.typography.titleLarge,
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-//                    text = item.formatedPrice(),
                     text = String.format("%d", item.quantity),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
             Text(
-//                text = stringResource(R.string.in_stock, item.quantity),
-                text = "quantity",
+                text = item.formatLastModifiedAt(),
                 style = MaterialTheme.typography.titleMedium
             )
         }

@@ -15,5 +15,5 @@ class OfflineRepItemsRepository(private val itemDao: RepItemDao) : RepItemsRepos
 
     override suspend fun insertItem(item: RepItem) = itemDao.insert(item)
 
-    override fun getItemStream(id: Int): Flow<RepItem> = itemDao.getItem(id)
+    override fun getItemStream(id: Int, name: String): Flow<RepItem> = itemDao.getItem(id, name)
 }

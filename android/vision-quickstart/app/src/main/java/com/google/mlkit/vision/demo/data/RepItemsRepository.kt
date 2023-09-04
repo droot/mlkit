@@ -9,7 +9,7 @@ interface RepItemsRepository {
 
     fun getAllItemsStream(): Flow<List<RepItem>>
 
-    fun getItemStream(id: Int): Flow<RepItem>
+    fun getItemStream(id: Int, name: String): Flow<RepItem>
 
     suspend fun insertItem(item: RepItem)
 

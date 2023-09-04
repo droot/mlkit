@@ -35,7 +35,6 @@ import kotlinx.coroutines.runBlocking
 import java.util.Locale
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.Calendar
 import java.util.Random
 /** A processor to run pose detector. */
 class PoseDetectorProcessor(
@@ -74,8 +73,8 @@ class PoseDetectorProcessor(
   }
 
   fun generateRandomNumberBasedOnDay(): Int {
-    val calendar = Calendar.getInstance()
-    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+//    val calendar = Calendar.getInstance()
+//    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
     // Use the day of the month as the seed for random number generation
 //    val random = Random(dayOfMonth.toLong())
@@ -153,7 +152,7 @@ class PoseDetectorProcessor(
           sessionID,
           name,
           reps,
-          ""
+          lastModifiedTime = System.currentTimeMillis()
         )
         runBlocking {
           container.itemsRepository.upsertItem(item)

@@ -25,9 +25,9 @@ interface RepItemDao {
     @Delete
     suspend fun delete(item: RepItem)
 
-    @Query("SELECT * from reps WHERE id = :id")
-    fun getItem(id: Int): Flow<RepItem>
+    @Query("SELECT * from reps WHERE id = :id AND name = :name")
+    fun getItem(id: Int, name: String): Flow<RepItem>
 
-    @Query("SELECT * from reps")
+    @Query("SELECT * from reps ORDER BY lastModifiedTime DESC")
     fun getAllItems(): Flow<List<RepItem>>
 }
