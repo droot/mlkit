@@ -46,7 +46,7 @@ import com.google.mlkit.vision.demo.data.AppDataContainer
 
 /** Live preview demo app for ML Kit APIs using CameraX. */
 @KeepName
-class CameraXLivePreviewActivity :
+class CameraXLivePreviewActivity () :
   AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
   private var cameraProvider: ProcessCameraProvider? = null

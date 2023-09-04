@@ -1,48 +1,62 @@
 package com.google.mlkit.vision.demo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.mlkit.vision.demo.data.RepItem
 import com.google.mlkit.vision.demo.ui.theme.RepsTrackerTheme
-import java.text.SimpleDateFormat
-import java.util.Locale
+import androidx.compose.runtime.getValue
 
-class ActivityHistory : ComponentActivity() {
+class ActivityHistory :  ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             RepsTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
-
+//                    Greeting("Android")
+                    ActivityHistoryScreen()
                 }
             }
         }
@@ -66,99 +80,96 @@ fun GreetingPreview() {
 }
 
 
+//@OptIn(ExperimentalMaterial3Api::class)
+//@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun RepItemsScreen(
-    repItems: List<RepItem>,
+fun ActivityHistoryScreen(
     modifier: Modifier = Modifier,
-    onScheduleClick: ((String) -> Unit)? = null,
+    viewModel: RepsTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-//    val stopNameText = if (stopName == null) {
-//        stringResource(R.string.stop_name)
-//    } else {
-//        "$stopName ${stringResource(R.string.route_stop_name)}"
-//    }
+//    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val stopNameText = "Woho"
+    val homeUiState by viewModel.homeUiState.collectAsState()
 
-    Column(modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-//                .padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(stopNameText)
-//            Text(stringResource(R.string.arrival_time))
-            Text("hey")
+    HomeBody(
+        itemList = homeUiState.itemList,
+        onItemClick = {},
+        modifier = Modifier
+//                .padding(innerPadding)
+            .fillMaxSize()
+    )
+}
+
+@Composable
+private fun HomeBody(
+    itemList: List<RepItem>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        if (itemList.isEmpty()) {
+            Text(
+                text = "No Activity",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge
+            )
+        } else {
+            InventoryList(
+                itemList = itemList,
+                onItemClick = { onItemClick(it.id) },
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+            )
         }
-        Divider()
-        ActivityDetails(
-            repItems = repItems,
-//            onScheduleClick = onScheduleClick
-        )
     }
 }
 
-/*
-* Composable for BusScheduleDetails which show list of bus schedule
-* When [onScheduleClick] is null, [stopName] is replaced with placeholder
-* as it is assumed [stopName]s are the same as shown
-* in the list heading display in [BusScheduleScreen]
-*/
+
 @Composable
-fun ActivityDetails(
-    repItems: List<RepItem>,
-    modifier: Modifier = Modifier,
-//    onScheduleClick: ((String) -> Unit)? = null
+private fun InventoryList(
+    itemList: List<RepItem>, onItemClick: (RepItem) -> Unit, modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(vertical = 8.dp)) {
-        items(
-            count = repItems.size,
-//            items = repItems,
-//            key = { (repItem: RepItem) -> repItem.id }
-        ) { repItem ->
-            Row(
+    LazyColumn(modifier = modifier) {
+        items(items = itemList, key = { it.id }) { item ->
+            InventoryItem(item = item,
                 modifier = Modifier
-                    .fillMaxWidth(),
-//                    .clickable(enabled = onScheduleClick != null) {
-//                        onScheduleClick?.invoke(repItem.)
-//                    },
-//                    .padding(
-//                        vertical = dimensionResource(R.dimen.padding_medium),
-//                        horizontal = dimensionResource(R.dimen.padding_medium)
-//                    ),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onItemClick(item) })
+        }
+    }
+}
+
+@Composable
+private fun InventoryItem(
+    item: RepItem, modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth()
             ) {
-//                if (onScheduleClick == null) {
-                    Text(
-                        text = "--",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-//                            fontSize = dimensionResource(R.dimen.font_large).value.sp,
-                            fontWeight = FontWeight(300)
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.weight(1f)
-                    )
-//                } else {
-//                    Text(
-//                        text = schedule.stopName,
-//                        style = MaterialTheme.typography.bodyLarge.copy(
-//                            fontSize = dimensionResource(R.dimen.font_large).value.sp,
-//                            fontWeight = FontWeight(300)
-//                        )
-//                    )
-//                }
-//                Text(
-//                    text = SimpleDateFormat("h:mm a", Locale.getDefault())
-//                        .format(Date(schedule.arrivalTimeInMillis.toLong() * 1000)),
-//                    style = MaterialTheme.typography.bodyLarge.copy(
-//                        fontSize = dimensionResource(R.dimen.font_large).value.sp,
-//                        fontWeight = FontWeight(600)
-//                    ),
-//                    textAlign = TextAlign.End,
-//                    modifier = Modifier.weight(2f)
-//                )
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+//                    text = item.formatedPrice(),
+                    text = String.format("%d", item.quantity),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
+            Text(
+//                text = stringResource(R.string.in_stock, item.quantity),
+                text = "quantity",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }

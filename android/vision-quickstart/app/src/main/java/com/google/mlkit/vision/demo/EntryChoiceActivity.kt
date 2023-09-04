@@ -62,7 +62,7 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
               val intent =
                 Intent(
                   this@EntryChoiceActivity,
-                  com.google.mlkit.vision.demo.ActivityHistory::class.java
+                  ActivityHistory::class.java
                 )
               startActivity(intent)
 
@@ -155,18 +155,18 @@ fun HomeScreen(
   }
 }
 
-@Composable
-fun ActivityHistoryScreen() {
-  Column(Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Button(onClick = {},
-      modifier = Modifier.padding(vertical = 24.dp)
-    ) {
-      Text(
-        text = stringResource(R.string.activity_history_title),
-      )
-    }
-  }
-}
+//@Composable
+//fun ActivityHistoryScreen() {
+//  Column(Modifier.fillMaxSize(),
+//    verticalArrangement = Arrangement.Center,
+//    horizontalAlignment = Alignment.CenterHorizontally
+//  ) {
+//    Button(onClick = {},
+//      modifier = Modifier.padding(vertical = 24.dp)
+//    ) {
+//      Text(
+//        text = stringResource(R.string.activity_history_title),
+//      )
+//    }
+//  }
+//}
