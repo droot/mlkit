@@ -72,7 +72,7 @@ class PoseDetectorProcessor(
     }
   }
 
-  fun generateRandomNumberBasedOnDay(): Int {
+  private fun generateRandomNumberBasedOnDay(): Int {
 //    val calendar = Calendar.getInstance()
 //    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
@@ -99,7 +99,7 @@ class PoseDetectorProcessor(
       .continueWith(
         classificationExecutor,
         { task ->
-          val pose = task.getResult()
+          val pose = task.result
           var classificationResult: List<String> = ArrayList()
           if (runClassification) {
             if (poseClassifierProcessor == null) {
@@ -118,7 +118,7 @@ class PoseDetectorProcessor(
       .continueWith(
         classificationExecutor,
         { task ->
-          val pose = task.getResult()
+          val pose = task.result
           var classificationResult: List<String> = ArrayList()
           if (runClassification) {
             if (poseClassifierProcessor == null) {
@@ -146,8 +146,13 @@ class PoseDetectorProcessor(
       )
     )
     try {
-      val exerciseInfo = parseExercise(poseWithClassification.classificationResult[0])
-      val (name, reps) = exerciseInfo
+        val exerciseInfo = parseExercise(poseWithClassification.classificationResult[0])
+        val (name, reps) = exerciseInfo
+        if (reps < 2) {
+          // the first rep is not accurate in most cases, so better to upsert only
+          // more reps are detected.
+          return
+        }
         val item = RepItem(
           sessionID,
           name,
@@ -162,9 +167,9 @@ class PoseDetectorProcessor(
       }
   }
 
-  fun parseExercise(string: String): Pair<String, Int> {
+  private fun parseExercise(string: String): Pair<String, Int> {
     val regex = """(\w+)\s:\s(\d+)\sreps""".toRegex()
-    val match = regex.find(string) ?: throw IllegalArgumentException("String is not in the format '%s : %d reps'")
+    val match = regex.find(string) ?: return Pair("", 0)
 
     val exerciseName = match.groupValues[1]
     val reps = match.groupValues[2].toInt()
@@ -183,6 +188,6 @@ class PoseDetectorProcessor(
   }
 
   companion object {
-    private val TAG = "PoseDetectorProcessor"
+    const val TAG = "PoseDetectorProcessor"
   }
 }

@@ -28,6 +28,6 @@ interface RepItemDao {
     @Query("SELECT * from reps WHERE id = :id AND name = :name")
     fun getItem(id: Int, name: String): Flow<RepItem>
 
-    @Query("SELECT * from reps ORDER BY lastModifiedTime DESC")
+    @Query("SELECT * from reps WHERE quantity > 1 ORDER BY lastModifiedTime DESC")
     fun getAllItems(): Flow<List<RepItem>>
 }
