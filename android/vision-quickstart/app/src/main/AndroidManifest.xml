@@ -18,7 +18,7 @@
     <!--        android:name="androidx.multidex.MultiDexApplication"-->
     <application
         android:name="com.google.mlkit.vision.demo.RepsTrackerApplication"
-        android:icon="@drawable/logo_mlkit"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
 
         <meta-data
